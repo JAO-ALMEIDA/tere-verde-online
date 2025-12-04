@@ -2,11 +2,7 @@
 
 ## Equipe
 
-| Nome | E-mail | RA/Matrícula |
-|------|--------|--------------|
-|      |        |              |
-|      |        |              |
-|      |        |              |
+Nome: João Vitor de Almeida Oliveira
 
 ## Situação-Problema
 
