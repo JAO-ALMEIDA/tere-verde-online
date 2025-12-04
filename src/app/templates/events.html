@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Eventos - Terê Verde Online{% endblock %}
+
+{% block content %}
+<h1>Eventos</h1>
+
+<div class="filters">
+	<form method="get" action="{{ url_for('public.events_list') }}" class="filter-form">
+		<div class="form-row">
+			<label for="park_id">Parque</label>
+			<select name="park_id" id="park_id">
+				<option value="">Todos os parques</option>
+				{% for park in parks %}
+				<option value="{{ park.id }}" {% if selected_park_id == park.id %}selected{% endif %}>
+					{{ park.name }}
+				</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="form-actions">
+			<button type="submit" class="btn">Filtrar</button>
+			<a class="link" href="{{ url_for('public.events_list') }}">Limpar filtros</a>
+		</div>
+	</form>
+</div>
+
+{% if events %}
+<ul class="list cards">
+	{% for event in events %}
+	<li class="card">
+		<h3>{{ event.title }}</h3>
+		{% if event.park %}
+		<p class="muted">Parque: <a href="{{ url_for('public.park_detail', park_id=event.park.id) }}">{{ event.park.name }}</a></p>
+		{% endif %}
+		<p>
+			Início: <strong>{{ event.start_datetime.strftime('%d/%m/%Y %H:%M') }}</strong>
+			{% if event.end_datetime %} · Término: <strong>{{ event.end_datetime.strftime('%d/%m/%Y %H:%M') }}</strong>{% endif %}
+		</p>
+		{% if event.description %}
+		<p class="muted">{{ event.description[:220] }}{% if event.description|length > 220 %}...{% endif %}</p>
+		{% endif %}
+	</li>
+	{% endfor %}
+</ul>
+{% else %}
+<p>Nenhum evento futuro encontrado com os filtros selecionados.</p>
+{% endif %}
+{% endblock %}
+

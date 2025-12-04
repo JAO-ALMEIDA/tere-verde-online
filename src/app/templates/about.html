@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Sobre - Terê Verde Online{% endblock %}
+
+{% block content %}
+<h1>Sobre o Terê Verde Online</h1>
+
+<div>
+	<h2>Objetivo</h2>
+	<p>O Terê Verde Online facilita o acesso às informações dos parques de Teresópolis: Parque Nacional da Serra dos Órgãos, Parque Estadual dos Três Picos e Parque Natural Municipal Montanhas de Teresópolis.</p>
+	<p>Promovemos o uso responsável das áreas naturais, com informações sobre trilhas, eventos, biodiversidade e condições de visitação.</p>
+</div>
+
+<div>
+	<h2>Uso Consciente</h2>
+	<ul>
+		<li><strong>Respeite os horários</strong> e as sinalizações.</li>
+		<li><strong>Leve seu lixo</strong> e mantenha os ambientes limpos.</li>
+		<li><strong>Fique nas trilhas</strong> para proteger a vegetação.</li>
+		<li><strong>Não alimente animais</strong> nem colete plantas.</li>
+		<li><strong>Prepare-se</strong>: água, calçado adequado e atenção ao clima.</li>
+	</ul>
+</div>
+
+<p><a class="link" href="{{ url_for('public.index') }}">← Voltar para a página inicial</a></p>
+{% endblock %}

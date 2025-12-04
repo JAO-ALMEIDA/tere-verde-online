@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Eventos - Tere Verde Online{% endblock %}
+
+{% block content %}
+<h1>Gerenciar Eventos</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<ul>
+    {% for category, message in messages %}
+    <li class="{{ category }}">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+<nav>
+    <a href="{{ url_for('admin.dashboard') }}">← Dashboard</a>
+    <a href="{{ url_for('admin.event_create') }}">+ Novo Evento</a>
+</nav>
+
+{% if events %}
+<table border="1" style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Parque</th>
+            <th>Data Início</th>
+            <th>Data Término</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in events %}
+        <tr>
+            <td>{{ event.id }}</td>
+            <td>{{ event.title }}</td>
+            <td>{{ event.park.name if event.park else '-' }}</td>
+            <td>{{ event.start_datetime.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>{{ event.end_datetime.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>{{ 'Ativo' if event.is_active else 'Inativo' }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('admin.event_toggle', event_id=event.id) }}"
+                    style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <button type="submit">{{ 'Desativar' if event.is_active else 'Ativar' }}</button>
+                </form>
+                <form action="{{ url_for('admin.event_delete', event_id=event.id) }}" method="GET"
+                    style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm"
+                        onclick="return confirm('Tem certeza que deseja excluir?');">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Nenhum evento cadastrado ainda.</p>
+{% endif %}
+{% endblock %}

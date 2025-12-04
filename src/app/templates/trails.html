@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Trilhas - Terê Verde Online{% endblock %}
+
+{% block content %}
+<h1>Trilhas</h1>
+
+<div class="filters">
+	<form method="get" action="{{ url_for('public.trails_list') }}" class="filter-form">
+		<div class="form-row">
+			<label for="park_id">Parque</label>
+			<select name="park_id" id="park_id">
+				<option value="">Todos os parques</option>
+				{% for park in parks %}
+				<option value="{{ park.id }}" {% if selected_park_id == park.id %}selected{% endif %}>
+					{{ park.name }}
+				</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="form-row">
+			<label for="difficulty">Dificuldade</label>
+			<select name="difficulty" id="difficulty">
+				<option value="">Todas</option>
+				<option value="fácil" {% if selected_difficulty == 'fácil' %}selected{% endif %}>Fácil</option>
+				<option value="moderada" {% if selected_difficulty == 'moderada' %}selected{% endif %}>Moderada</option>
+				<option value="difícil" {% if selected_difficulty == 'difícil' %}selected{% endif %}>Difícil</option>
+			</select>
+		</div>
+		<div class="form-actions">
+			<button type="submit" class="btn">Filtrar</button>
+			<a class="link" href="{{ url_for('public.trails_list') }}">Limpar filtros</a>
+		</div>
+	</form>
+</div>
+
+{% if trails %}
+<ul class="list cards">
+	{% for trail in trails %}
+	<li class="card">
+		<h3>{{ trail.name }}</h3>
+		{% if trail.park %}
+		<p class="muted">Parque: <a href="{{ url_for('public.park_detail', park_id=trail.park.id) }}">{{ trail.park.name }}</a></p>
+		{% endif %}
+		<p>
+			{% if trail.difficulty %}Dificuldade: <strong>{{ trail.difficulty }}</strong>{% endif %}
+			{% if trail.duration_estimated %} · Duração: <strong>{{ trail.duration_estimated }}</strong>{% endif %}
+			 · Status: <strong>{{ 'Aberta' if trail.is_open else 'Fechada' }}</strong>
+		</p>
+		{% if trail.description %}
+		<p class="muted">{{ trail.description[:220] }}{% if trail.description|length > 220 %}...{% endif %}</p>
+		{% endif %}
+	</li>
+	{% endfor %}
+</ul>
+{% else %}
+<p>Nenhuma trilha encontrada com os filtros selecionados.</p>
+{% endif %}
+{% endblock %}
+

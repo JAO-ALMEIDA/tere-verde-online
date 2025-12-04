@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}{{ park.name }} - Tere Verde Online{% endblock %}
+
+{% block content %}
+<h1>{{ park.name }}</h1>
+<p><strong>Tipo:</strong> {{ park.type }}</p>
+{% if park.location %}
+<p><strong>Localização:</strong> {{ park.location }}</p>
+{% endif %}
+
+{% if park.description %}
+<div>
+    <h2>Sobre o Parque</h2>
+    <p>{{ park.description }}</p>
+</div>
+{% endif %}
+
+{% if current_availability %}
+<div>
+    <h2>Horários de Funcionamento Atuais</h2>
+    <p><strong>{{ current_availability.season_name }}</strong></p>
+    <p>Horário: {{ current_availability.open_time }} às {{ current_availability.close_time }}</p>
+    <p>Período: {{ current_availability.start_date.strftime('%d/%m/%Y') }} até {{ current_availability.end_date.strftime('%d/%m/%Y') }}</p>
+</div>
+{% endif %}
+
+{% if trails %}
+<div>
+    <h2>Trilhas</h2>
+    <ul>
+        {% for trail in trails %}
+        <li>
+            <strong>{{ trail.name }}</strong>
+            {% if trail.difficulty %} - Dificuldade: {{ trail.difficulty }}{% endif %}
+            {% if trail.duration_estimated %} - Duração estimada: {{ trail.duration_estimated }}{% endif %}
+            {% if trail.description %}
+            <br><small>{{ trail.description }}</small>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if upcoming_events %}
+<div>
+    <h2>Próximos Eventos</h2>
+    <ul>
+        {% for event in upcoming_events %}
+        <li>
+            <strong>{{ event.title }}</strong>
+            <br>Data: {{ event.start_datetime.strftime('%d/%m/%Y %H:%M') }}
+            {% if event.end_datetime %} até {{ event.end_datetime.strftime('%d/%m/%Y %H:%M') }}{% endif %}
+            {% if event.description %}
+            <br><small>{{ event.description }}</small>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if biodiversity_items %}
+<div>
+    <h2>Biodiversidade</h2>
+    <ul>
+        {% for item in biodiversity_items %}
+        <li>
+            <strong>{{ item.name }}</strong> ({{ item.type }})
+            {% if item.description %}
+            <br><small>{{ item.description }}</small>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<a href="{{ url_for('public.parks_list') }}">← Voltar para lista de parques</a>
+{% endblock %}
+
+

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Tere Verde Online{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<nav>
+    <a href="{{ url_for('admin.availability_list') }}">← Voltar para Disponibilidade</a>
+</nav>
+
+<form method="POST" action="{{ url_for('admin.availability_create' if not period else 'admin.availability_edit', period_id=period.id if period else None) }}">
+    {{ form.hidden_tag() }}
+    
+    <div>
+        <label for="{{ form.park_id.id }}">{{ form.park_id.label }}</label>
+        {{ form.park_id() }}
+        {% if form.park_id.errors %}
+            <ul>
+            {% for error in form.park_id.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="{{ form.season_name.id }}">{{ form.season_name.label }}</label>
+        {{ form.season_name() }}
+        {% if form.season_name.errors %}
+            <ul>
+            {% for error in form.season_name.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="{{ form.open_time.id }}">{{ form.open_time.label }}</label>
+        <input type="time" name="{{ form.open_time.name }}" id="{{ form.open_time.id }}" 
+               value="{{ form.open_time.data.strftime('%H:%M') if form.open_time.data else '' }}" required>
+        {% if form.open_time.errors %}
+            <ul>
+            {% for error in form.open_time.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="{{ form.close_time.id }}">{{ form.close_time.label }}</label>
+        <input type="time" name="{{ form.close_time.name }}" id="{{ form.close_time.id }}" 
+               value="{{ form.close_time.data.strftime('%H:%M') if form.close_time.data else '' }}" required>
+        {% if form.close_time.errors %}
+            <ul>
+            {% for error in form.close_time.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="{{ form.start_date.id }}">{{ form.start_date.label }}</label>
+        <input type="date" name="{{ form.start_date.name }}" id="{{ form.start_date.id }}" 
+               value="{{ form.start_date.data.strftime('%Y-%m-%d') if form.start_date.data else '' }}" required>
+        {% if form.start_date.errors %}
+            <ul>
+            {% for error in form.start_date.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="{{ form.end_date.id }}">{{ form.end_date.label }}</label>
+        <input type="date" name="{{ form.end_date.name }}" id="{{ form.end_date.id }}" 
+               value="{{ form.end_date.data.strftime('%Y-%m-%d') if form.end_date.data else '' }}" required>
+        {% if form.end_date.errors %}
+            <ul>
+            {% for error in form.end_date.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <button type="submit">Salvar</button>
+    <a href="{{ url_for('admin.availability_list') }}">Cancelar</a>
+</form>
+{% endblock %}
+
+

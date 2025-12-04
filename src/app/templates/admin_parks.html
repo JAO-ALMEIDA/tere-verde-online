@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Parques - Tere Verde Online{% endblock %}
+
+{% block content %}
+<h1>Gerenciar Parques</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<nav>
+    <a href="{{ url_for('admin.dashboard') }}">← Dashboard</a>
+    <a href="{{ url_for('admin.park_create') }}">+ Novo Parque</a>
+</nav>
+
+{% if parks %}
+<table border="1" style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Tipo</th>
+            <th>Localização</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for park in parks %}
+        <tr>
+            <td>{{ park.id }}</td>
+            <td>{{ park.name }}</td>
+            <td>{{ park.type }}</td>
+            <td>{{ park.location or '-' }}</td>
+            <td>
+                <a href="{{ url_for('admin.park_edit', park_id=park.id) }}">Editar</a>
+                <form method="POST" action="{{ url_for('admin.park_delete', park_id=park.id) }}" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este parque?')">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Nenhum parque cadastrado ainda.</p>
+{% endif %}
+{% endblock %}
+

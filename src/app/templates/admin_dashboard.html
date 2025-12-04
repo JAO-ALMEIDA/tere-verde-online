@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Painel Administrativo - Tere Verde Online{% endblock %}
+
+{% block content %}
+<h1>Painel Administrativo</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<nav>
+    <a href="{{ url_for('admin.logout') }}">Sair</a>
+</nav>
+
+<div>
+    <h2>Estatísticas</h2>
+    <ul>
+        <li><strong>Parques:</strong> {{ parks_count }}</li>
+        <li><strong>Trilhas:</strong> {{ trails_count }} ({{ trails_open }} abertas)</li>
+        <li><strong>Eventos:</strong> {{ events_count }} ({{ events_active }} ativos, {{ events_upcoming }} futuros)</li>
+        <li><strong>Períodos de Disponibilidade:</strong> {{ availability_periods_count }}</li>
+    </ul>
+</div>
+
+<div>
+    <h2>Gerenciamento</h2>
+    <ul>
+        <li><a href="{{ url_for('admin.parks_list') }}">Gerenciar Parques</a></li>
+        <li><a href="{{ url_for('admin.trails_list') }}">Gerenciar Trilhas</a></li>
+        <li><a href="{{ url_for('admin.events_list') }}">Gerenciar Eventos</a></li>
+        <li><a href="{{ url_for('admin.availability_list') }}">Gerenciar Disponibilidade</a></li>
+    </ul>
+</div>
+
+<div>
+    <a href="{{ url_for('public.index') }}">Ver site público →</a>
+</div>
+{% endblock %}
+

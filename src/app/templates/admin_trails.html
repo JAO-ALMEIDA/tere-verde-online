@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Trilhas - Tere Verde Online{% endblock %}
+
+{% block content %}
+<h1>Gerenciar Trilhas</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<ul>
+    {% for category, message in messages %}
+    <li class="{{ category }}">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+<nav>
+    <a href="{{ url_for('admin.dashboard') }}">← Dashboard</a>
+    <a href="{{ url_for('admin.trail_create') }}">+ Nova Trilha</a>
+</nav>
+
+{% if trails %}
+<table border="1" style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Parque</th>
+            <th>Dificuldade</th>
+            <th>Duração</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for trail in trails %}
+        <tr>
+            <td>{{ trail.id }}</td>
+            <td>{{ trail.name }}</td>
+            <td>{{ trail.park.name if trail.park else '-' }}</td>
+            <td>{{ trail.difficulty }}</td>
+            <td>{{ trail.duration_estimated or '-' }}</td>
+            <td>{{ 'Aberta' if trail.is_open else 'Fechada' }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('admin.trail_toggle', trail_id=trail.id) }}"
+                    style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <button type="submit">{{ 'Fechar' if trail.is_open else 'Abrir' }}</button>
+                </form>
+                <form action="{{ url_for('admin.trail_delete', trail_id=trail.id) }}" method="GET"
+                    style="display:inline;"> 
+                    <button type="submit" class="btn btn-danger btn-sm"
+                        onclick="return confirm('Tem certeza que deseja excluir?');">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Nenhuma trilha cadastrada ainda.</p>
+{% endif %}
+{% endblock %}

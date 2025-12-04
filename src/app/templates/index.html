@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Início - Terê Verde Online{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>Bem-vindo ao Terê Verde Online</h1>
+    <p>Um portal simples e rápido para você descobrir os parques, trilhas, cachoeiras e eventos em Teresópolis. Explore a natureza com responsabilidade.</p>
+    <p><a class="btn" href="{{ url_for('public.parks_list') }}">Explorar parques</a></p>
+    <hr>
+</section>
+
+{% if parks %}
+<section>
+    <h2>Parques em Destaque</h2>
+    <div class="grid cards">
+        {% for park in parks[:3] %}
+        <div class="card">
+            <h3>{{ park.name }}</h3>
+            <p class="muted">{{ park.type }}</p>
+            {% if park.description %}
+            <p>{{ park.description[:160] }}{% if park.description|length > 160 %}...{% endif %}</p>
+            {% endif %}
+            <a class="btn" href="{{ url_for('public.park_detail', park_id=park.id) }}">Ver detalhes</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if recent_trails %}
+<section>
+    <h2>Trilhas em Destaque</h2>
+    <ul class="list">
+        {% for trail in recent_trails %}
+        <li>
+            <strong>{{ trail.name }}</strong>
+            {% if trail.park %} · {{ trail.park.name }}{% endif %}
+            {% if trail.difficulty %} · {{ trail.difficulty }}{% endif %}
+            {% if trail.duration_estimated %} · {{ trail.duration_estimated }}{% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    <p><a class="link" href="{{ url_for('public.trails_list') }}">Ver todas as trilhas →</a></p>
+</section>
+{% endif %}
+
+{% if upcoming_events %}
+<section>
+    <h2>Próximos Eventos</h2>
+    <ul class="list">
+        {% for event in upcoming_events %}
+        <li>
+            <strong>{{ event.title }}</strong>
+            {% if event.park %} · {{ event.park.name }}{% endif %}
+            · {{ event.start_datetime.strftime('%d/%m/%Y %H:%M') }}
+        </li>
+        {% endfor %}
+    </ul>
+    <p><a class="link" href="{{ url_for('public.events_list') }}">Ver todos os eventos →</a></p>
+</section>
+{% endif %}
+{% endblock %}
+

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Disponibilidade - Tere Verde Online{% endblock %}
+
+{% block content %}
+<h1>Gerenciar Disponibilidade</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<nav>
+    <a href="{{ url_for('admin.dashboard') }}">← Dashboard</a>
+    <a href="{{ url_for('admin.availability_create') }}">+ Novo Período</a>
+</nav>
+
+{% if periods %}
+<table border="1" style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome da Temporada</th>
+            <th>Parque</th>
+            <th>Horário</th>
+            <th>Data Início</th>
+            <th>Data Término</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for period in periods %}
+        <tr>
+            <td>{{ period.id }}</td>
+            <td>{{ period.season_name }}</td>
+            <td>{{ period.park.name if period.park else '-' }}</td>
+            <td>{{ period.open_time }} - {{ period.close_time }}</td>
+            <td>{{ period.start_date.strftime('%d/%m/%Y') }}</td>
+            <td>{{ period.end_date.strftime('%d/%m/%Y') }}</td>
+            <td>
+                <a href="{{ url_for('admin.availability_edit', period_id=period.id) }}">Editar</a>
+                <form method="POST" action="{{ url_for('admin.availability_delete', period_id=period.id) }}" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este período?')">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Nenhum período de disponibilidade cadastrado ainda.</p>
+{% endif %}
+{% endblock %}
+
+

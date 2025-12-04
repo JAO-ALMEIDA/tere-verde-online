@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Tere Verde Online{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<nav>
+    <a href="{{ url_for('admin.events_list') }}">← Voltar para Eventos</a>
+</nav>
+
+<form method="POST" action="{{ url_for('admin.event_create' if not event else 'admin.event_edit', event_id=event.id if event else None) }}">
+    {{ form.hidden_tag() }}
+    
+    <div>
+        <label for="{{ form.park_id.id }}">{{ form.park_id.label }}</label>
+        {{ form.park_id() }}
+        {% if form.park_id.errors %}
+            <ul>
+            {% for error in form.park_id.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="{{ form.title.id }}">{{ form.title.label }}</label>
+        {{ form.title() }}
+        {% if form.title.errors %}
+            <ul>
+            {% for error in form.title.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="{{ form.description.id }}">{{ form.description.label }}</label>
+        {{ form.description(rows=5) }}
+        {% if form.description.errors %}
+            <ul>
+            {% for error in form.description.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="{{ form.start_datetime.id }}">{{ form.start_datetime.label }}</label>
+        <input type="datetime-local" name="{{ form.start_datetime.name }}" id="{{ form.start_datetime.id }}" 
+               value="{{ form.start_datetime.data.strftime('%Y-%m-%dT%H:%M') if form.start_datetime.data else '' }}" required>
+        {% if form.start_datetime.errors %}
+            <ul>
+            {% for error in form.start_datetime.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="{{ form.end_datetime.id }}">{{ form.end_datetime.label }}</label>
+        <input type="datetime-local" name="{{ form.end_datetime.name }}" id="{{ form.end_datetime.id }}" 
+               value="{{ form.end_datetime.data.strftime('%Y-%m-%dT%H:%M') if form.end_datetime.data else '' }}" required>
+        {% if form.end_datetime.errors %}
+            <ul>
+            {% for error in form.end_datetime.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="{{ form.is_active.id }}">{{ form.is_active.label }}</label>
+        {{ form.is_active() }}
+        {% if form.is_active.errors %}
+            <ul>
+            {% for error in form.is_active.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <button type="submit">Salvar</button>
+    <a href="{{ url_for('admin.events_list') }}">Cancelar</a>
+</form>
+{% endblock %}
+
+

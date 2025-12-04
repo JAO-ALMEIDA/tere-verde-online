@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Tere Verde Online{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<nav>
+    <a href="{{ url_for('admin.trails_list') }}">← Voltar para Trilhas</a>
+</nav>
+
+<form method="POST" action="{{ url_for('admin.trail_create' if not trail else 'admin.trail_edit', trail_id=trail.id if trail else None) }}">
+    {{ form.hidden_tag() }}
+    
+    <div>
+        <label for="{{ form.park_id.id }}">{{ form.park_id.label }}</label>
+        {{ form.park_id() }}
+        {% if form.park_id.errors %}
+            <ul>
+            {% for error in form.park_id.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="{{ form.name.id }}">{{ form.name.label }}</label>
+        {{ form.name() }}
+        {% if form.name.errors %}
+            <ul>
+            {% for error in form.name.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="{{ form.difficulty.id }}">{{ form.difficulty.label }}</label>
+        {{ form.difficulty() }}
+        {% if form.difficulty.errors %}
+            <ul>
+            {% for error in form.difficulty.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="{{ form.duration_estimated.id }}">{{ form.duration_estimated.label }}</label>
+        {{ form.duration_estimated() }}
+        {% if form.duration_estimated.errors %}
+            <ul>
+            {% for error in form.duration_estimated.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="{{ form.description.id }}">{{ form.description.label }}</label>
+        {{ form.description(rows=5) }}
+        {% if form.description.errors %}
+            <ul>
+            {% for error in form.description.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="{{ form.is_open.id }}">{{ form.is_open.label }}</label>
+        {{ form.is_open() }}
+        {% if form.is_open.errors %}
+            <ul>
+            {% for error in form.is_open.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <button type="submit">Salvar</button>
+    <a href="{{ url_for('admin.trails_list') }}">Cancelar</a>
+</form>
+{% endblock %}
+
+
